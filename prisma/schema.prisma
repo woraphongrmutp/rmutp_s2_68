@@ -15,7 +15,7 @@ datasource db {
 
 
 model User {
-  id String @id @defaults(uuid())
+  id String @id @default(uuid())
   username String @unique
   password String
   mobile   String @unique @db.Varchar(10)
