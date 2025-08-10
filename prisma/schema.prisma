@@ -14,10 +14,10 @@ datasource db {
 
 
 
-medel User {
+model User {
   id String @id @defaults(uuid())
   username String @unique
   password String
-  mobile String @unique @db.Varchar(10)
-  cardId String @unique @db.Varchar(13)
+  mobile   String @unique @db.Varchar(10)
+  cardId   String @unique @db.Varchar(13)
 }
