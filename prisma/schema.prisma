@@ -1,0 +1,23 @@
+
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+
+
+
+
+medel User {
+  id String @id @defaults(uuid())
+  username String @unique
+  password String
+  mobile String @unique @db.Varchar(10)
+  cardId String @unique @db.Varchar(13)
+}
