@@ -14,3 +14,5 @@ npx prisma generate
 npx prisma push db
 npx prisma studio
 ~~~~~
+
+## New Hw8 create new branch 2-create-prisma-orm
