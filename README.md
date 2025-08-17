@@ -14,3 +14,10 @@ npx prisma generate
 npx prisma push db
 npx prisma studio
 ~~~~~
+## change name User to Profile
+~~~bash
+npx prisma migrate dev --name rename_user_to_profile
+npx prisma generate
+npx prisma push db
+npx prisma studi
+~~~~
