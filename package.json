@@ -1,7 +1,9 @@
 {
   
   "scripts": {
-    "dev": "tsc src/server.ts"  
+    
+    "build": "tsc", 
+    "dev": "node dist/server.js"  
   },
   "dependencies": {
     "hono": "^4.6.0",
