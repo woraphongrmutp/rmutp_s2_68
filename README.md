@@ -19,5 +19,9 @@ npx prisma studio
 npx prisma migrate dev --name rename_user_to_profile
 npx prisma generate
 npx prisma push db
-npx prisma studi
+npx prisma studio
 ~~~~
+
+## หลังจาก แก้ไข schma.prisma แล้วทำการ reset ทำให้ database หายหมด ต้อง 
+npx prisma migrate dev --name init_profile_table  // สร้างง table ใหม่
+~~~~~~~
