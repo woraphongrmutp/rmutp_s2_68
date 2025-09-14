@@ -27,8 +27,8 @@ Content-Type: application/json
 ### Delete Profile
 DELETE http://localhost:3000/profile/6afb93c4-f429-47d8-a1d8-c887b69332b4
 
-### Encode  Class Sun 14 Sep ยังไม่สำเร็จ
+### Encode  Class Sun 14 Sep test ok
 POST http://localhost:3000/encode
 
-### Decode  Class Sun 14 Sep ยังไม่สำเร็จ
+### Decode  Class Sun 14 Sep test ok
 POST http://localhost:3000/decode
