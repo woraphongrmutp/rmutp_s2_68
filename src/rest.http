@@ -9,10 +9,10 @@ POST http://localhost:3000/profile
 Content-Type: application/json
 
 {
-    "username": "demo3",
-    "password": "demo3",
-    "mobile": "0912345678",
-    "cardId": "1234567890123"
+    "username": "demo7",
+    "password": "demo7",
+    "mobile": "0352145890",
+    "cardId": "3220100858126"
 }
 
 ### Update Profile
@@ -20,9 +20,15 @@ PUT http://localhost:3000/profile/6afb93c4-f429-47d8-a1d8-c887b69332b4
 Content-Type: application/json
 
 {
-    "username": "demo3_edit",
+    "username": "demo_edit",
     "mobile": "0999999999"
 }
 
 ### Delete Profile
 DELETE http://localhost:3000/profile/6afb93c4-f429-47d8-a1d8-c887b69332b4
+
+### Encode  Class Sun 14 Sep ยังไม่สำเร็จ
+POST http://localhost:3000/encode
+
+### Decode  Class Sun 14 Sep ยังไม่สำเร็จ
+POST http://localhost:3000/decode

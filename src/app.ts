@@ -2,6 +2,7 @@ import { Hono } from "hono";
 import { PrismaClient } from "@prisma/client";
 import * as bcrypt from "bcrypt";
 import { encrypt, decrypt } from "./utils/crypto";
+// import { encode, decode } from "./security";  Class Sun 14 Sep การบ้าน
 
 const prisma = new PrismaClient();
 const app = new Hono();
