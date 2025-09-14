@@ -2,7 +2,7 @@ import { Hono } from "hono";
 import { PrismaClient } from "@prisma/client";
 import * as bcrypt from "bcrypt";
 import { encrypt, decrypt } from "./utils/crypto";
-// import { encode, decode } from "./security";  Class Sun 14 Sep การบ้าน
+import { encode, decode } from "./security";   // Class Sun 14
 
 const prisma = new PrismaClient();
 const app = new Hono();
@@ -104,6 +104,20 @@ app.post("/login", async (c) => {
       mobile: decrypt(user.mobile),
       cardId: decrypt(user.cardId),
     },
+  });
+});
+
+// Class Sun 14 add encode /decode
+app.post("/encode", async (c) => {
+  return c.json({
+      message: "encode completed",
+      func: encode(),
+  });
+});
+app.post("/decode", async (c) => {
+  return c.json({
+      message: "decode completed",
+      func: decode(),
   });
 });
 
