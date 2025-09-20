@@ -14,7 +14,7 @@ model Profile {
   id String @id @default(uuid())
   username String @unique
   password String
-  mobile   String 
-  cardId   String 
+  mobile   String?
+  cardId   String? 
   
 }
