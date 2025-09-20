@@ -2,23 +2,17 @@ import { Hono } from "hono";
 import { PrismaClient } from "@prisma/client";
 import * as bcrypt from "bcrypt";
 import { encrypt, decrypt } from "./utils/crypto";
-import { encode, decode } from "./security";   // Class Sun 14
 
-const prisma = new PrismaClient();
 const app = new Hono();
+const prisma = new PrismaClient();
 
-// GET: ดึง profile ทั้งหมด (ถอดรหัส mobile, cardId ก่อนส่ง)
+// GET all profiles
 app.get("/profile", async (c) => {
   const profiles = await prisma.profile.findMany();
-  const decryptedProfiles = profiles.map((p) => ({
-    ...p,
-    mobile: decrypt(p.mobile),
-    cardId: decrypt(p.cardId),
-  }));
-  return c.json(decryptedProfiles);
+  return c.json(profiles);
 });
 
-// GET: ดึง profile ตาม id
+// GET profile by id
 app.get("/profile/:id", async (c) => {
   const id = c.req.param("id");
   const profile = await prisma.profile.findUnique({ where: { id } });
@@ -26,98 +20,55 @@ app.get("/profile/:id", async (c) => {
 
   return c.json({
     ...profile,
-    mobile: decrypt(profile.mobile),
-    cardId: decrypt(profile.cardId),
+    mobile: profile.mobile ? decrypt(profile.mobile) : null,
+    cardId: profile.cardId ? decrypt(profile.cardId) : null,
   });
 });
 
-// POST: สร้าง profile ใหม่ (hash password + encrypt mobile, cardId)
+// POST profile
 app.post("/profile", async (c) => {
-  const body = await c.req.json();
-  const { username, password, mobile, cardId } = body;
-
+  const { username, password, mobile, cardId } = await c.req.json();
   const hashedPassword = await bcrypt.hash(password, 10);
 
-  try {
-    const profile = await prisma.profile.create({
-      data: {
-        username,
-        password: hashedPassword,
-        mobile: encrypt(mobile),
-        cardId: encrypt(cardId),
-      },
-    });
-    return c.json(profile, 201);
-  } catch (err) {
-    return c.json({ error: "Cannot create profile", details: String(err) }, 400);
-  }
-});
-
-// PUT: แก้ไข profile (encrypt ถ้ามี mobile หรือ cardId)
-app.put("/profile/:id", async (c) => {
-  const id = c.req.param("id");
-  const body = await c.req.json();
-  const { username, password, mobile, cardId } = body;
-
-  const updateData: any = {};
-  if (username) updateData.username = username;
-  if (mobile) updateData.mobile = encrypt(mobile);
-  if (cardId) updateData.cardId = encrypt(cardId);
-  if (password) updateData.password = await bcrypt.hash(password, 10);
-
-  try {
-    const profile = await prisma.profile.update({
-      where: { id },
-      data: updateData,
-    });
-    return c.json(profile);
-  } catch (err) {
-    return c.json({ error: "Cannot update profile", details: String(err) }, 400);
-  }
-});
-
-// DELETE: ลบ profile
-app.delete("/profile/:id", async (c) => {
-  const id = c.req.param("id");
-  try {
-    await prisma.profile.delete({ where: { id } });
-    return c.json({ message: "Profile deleted" });
-  } catch (err) {
-    return c.json({ error: "Cannot delete profile", details: String(err) }, 400);
-  }
-});
-
-// LOGIN: ตรวจสอบ username + password (ถอดรหัสข้อมูลก่อนส่งกลับ)
-app.post("/login", async (c) => {
-  const { username, password } = await c.req.json();
-  const user = await prisma.profile.findUnique({ where: { username } });
-  if (!user) return c.json({ error: "User not found" }, 404);
-
-  const isValid = await bcrypt.compare(password, user.password);
-  if (!isValid) return c.json({ error: "Invalid password" }, 401);
-
-  return c.json({
-    message: "Login successful",
-    user: {
-      id: user.id,
-      username: user.username,
-      mobile: decrypt(user.mobile),
-      cardId: decrypt(user.cardId),
+  const newProfile = await prisma.profile.create({
+    data: {
+      username,
+      password: hashedPassword,
+      mobile: mobile ? encrypt(mobile) : "",
+      cardId: cardId ? encrypt(cardId) : "",
     },
   });
+
+  return c.json(newProfile);
 });
 
-// Class Sun 14 add encode /decode
+// POST /encode ทำเหมือน POST /profile แต่ชื่อ endpoint เป็น /encode
 app.post("/encode", async (c) => {
-  return c.json({
-      message: "encode completed",
-      func: encode(),
+  const { username, password, mobile, cardId } = await c.req.json();
+  const hashedPassword = await bcrypt.hash(password, 10);
+
+  const newProfile = await prisma.profile.create({
+    data: {
+      username,
+      password: hashedPassword,
+      mobile: mobile ? encrypt(mobile) : "",
+      cardId: cardId ? encrypt(cardId) : "",
+    },
   });
+
+  return c.json(newProfile);
 });
-app.post("/decode", async (c) => {
+
+// GET /decode/:id ทำเหมือน GET /profile/:id
+app.get("/decode/:id", async (c) => {
+  const id = c.req.param("id");
+  const profile = await prisma.profile.findUnique({ where: { id } });
+  if (!profile) return c.json({ error: "Profile not found" }, 404);
+
   return c.json({
-      message: "decode completed",
-      func: decode(),
+    ...profile,
+    mobile: profile.mobile ? decrypt(profile.mobile) : null,
+    cardId: profile.cardId ? decrypt(profile.cardId) : null,
   });
 });
 
