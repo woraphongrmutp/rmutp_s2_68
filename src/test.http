@@ -1,0 +1,35 @@
+### POST /profile - สร้าง profile ใหม่
+POST http://localhost:3000/profile
+Content-Type: application/json
+
+{
+  "username": "demoTest",
+  "password": "123456",
+  "mobile": "0812345678",
+  "cardId": "1234567890123"
+}
+
+### GET /profile - ดึง profile ทั้งหมด
+GET http://localhost:3000/profile
+
+### GET /profile/:id - ดึง profile ตาม id 
+
+GET http://localhost:3000/profile/
+
+### POST /encode - สร้าง profile ใหม่แบบเข้ารหัส (เหมือน /profile)
+POST http://localhost:3000/encode
+Content-Type: application/json
+
+{
+  "username": "HUN SEN",
+  "password": "guyfromhell",
+  "mobile": "0924141422",
+  "cardId": "4558744122121"
+}
+
+### GET /decode/:id - ถอดรหัส profile ตาม id
+# เปลี่ยน {id} เป็น id ที่ได้จาก POST /encode
+GET http://localhost:3000/decode/dfd30aa9-4b2e-4fdc-8217-f487329bb1a7
+
+### GET /profile - ตรวจสอบ profile ทั้งหมดหลัง encode
+GET http://localhost:3000/profile
